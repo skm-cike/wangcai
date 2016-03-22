@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<description>定时器配置文件</description>
+
+	<!-- cron定时器 -->
+	
+	<!-- 
+	<bean id="cycleworkTimer" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> 
+		 <property name="targetObject">
+		 	<ref bean="cycleworkTimerService"/>
+		 </property>
+		 <property name="targetMethod"> 
+		 	<value>saveCycleworkNextTime</value> 
+		 </property>
+	</bean> 
+	<bean id="cronCycleworkTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+		 <property name="jobDetail"> 
+		     <ref bean="cycleworkTimer" /> 
+		 </property> 
+		 <property name="cronExpression"> 
+	 		<value>00 56 * * * ?</value> 
+	 	</property> 
+	 </bean> 
+	 
+	 <bean id="cycleworkLogTimer" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> 
+		 <property name="targetObject">
+		 	<ref bean="cycleworkTimerService"/>
+		 </property>
+		 <property name="targetMethod"> 
+		 	<value>saveCycleworkLog</value>
+		 </property>
+	</bean> 
+	<bean id="cronCycleworkLogTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+		 <property name="jobDetail"> 
+		     <ref bean="cycleworkLogTimer" /> 
+		 </property> 
+		 <property name="cronExpression"> 
+	 		<value>00 20 * * * ?</value> 
+	 	</property> 
+	</bean> 
+	 -->
+	 
+	<!-- 设备润滑提醒开始 
+	<bean id="lubricationFillingCycleTimer" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> 
+		 <property name="targetObject">
+		 	<ref bean="assetLubricationsinitService"/>
+		 </property>
+		 <property name="targetMethod"> 
+		 	<value>savAssetLubricationsinitFillingcycle</value> 
+		 </property>
+	</bean> 
+	<bean id="cronLubricationFillingCycleTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+		 <property name="jobDetail"> 
+		     <ref bean="lubricationFillingCycleTimer" /> 
+		 </property> 
+		 <property name="cronExpression"> 
+	 		<value>00 00/60 * * * ?</value> 
+	 	</property> 
+	</bean> 
+	-->
+	<!-- 设备润滑提醒结束 -->
+	<!-- 
+	<bean name="clearTmpDir" class="com.est.common.ext.util.fileutil.FileClearCycleTimerTask">
+		<description>清除临时文件</description>
+	</bean>
+	
+	<bean id="clearTmpDirTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<description>清除临时文件定时任务设置</description>
+		<property name="timerTask">
+			<ref bean="clearTmpDir" />
+		</property>
+		<property name="period">
+			<value>7200000</value>
+		</property>
+		<property name="delay">
+			<value>180000</value>
+		</property>
+	</bean>
+	 -->
+	
+	<!-- 启动定时期-->
+	<!-- 
+	<bean class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<description>Timer激活的定时器列表</description>
+		<property name="scheduledTimerTasks">
+			<list>
+			  	<ref bean="clearTmpDirTask"/> 
+			</list>
+		</property>
+	</bean>
+	 -->
+</beans>

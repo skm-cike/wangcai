@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:p="http://www.springframework.org/schema/p"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:mvc="http://www.springframework.org/schema/mvc"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--<context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>-->
+<!-- =============================redis内存数据库连接池配置======================================= -->
+ <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+ <!-- 说明一个pool可以有多少个Jedis实例 -->
+  <property name="maxTotal" value="${redis.maxActive}" />
+  <!-- 最大Idle-->
+  <property name="maxIdle" value="${redis.maxIdle}" />
+  <!-- 最小Idle -->
+  <property name="minIdle" value="${redis.minIdle}" />
+  <!-- 获得一个jedis实例的时候是否检查连接可用性（ping()） -->
+  <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+  <!-- return 一个jedis实例给pool时，是否检查连接可用性（ping()） -->
+  <property name="testOnReturn" value="${redis.testOnReturn}" />
+  <!-- idle状态监测用异步线程evict进行检查， -->
+  <property name="testWhileIdle" value="${redis.testWhileIdle}" />
+  <!-- 一次最多evict的pool里的jedis实例个数 -->
+  <property name="numTestsPerEvictionRun" value="${redis.numTestsPerEvictionRun}" />
+  <!-- test idle 线程的时间间隔 -->
+  <property name="timeBetweenEvictionRunsMillis" value="${redis.timeBetweenEvictionRunsMillis}" />
+  <!--最大等待wait时间-->
+  <property name="maxWaitMillis" value="${redis.maxWait}" />
+  <!-- <property name="whenExhaustedAction" value="" /> -->
+
+   <property name="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}" />
+ </bean>
+
+ <!--<bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="destroy">-->
+  <!--<constructor-arg ref="jedisPoolConfig" />-->
+  <!--<constructor-arg type="java.lang.String" value="${redis.host}" />-->
+  <!--<constructor-arg type="int" value="${redis.port}" />-->
+ <!--</bean>-->
+
+ <bean id="jedisConnFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+  <property name="hostName"  value="${redis.host}" />
+  <property name="port"  value="${redis.port}" />
+  <property name="password" value="${redis.pass}"/>
+  <property name="timeout"  value="${redis.timeout}" />
+  <property name="poolConfig"  ref="jedisPoolConfig" />
+  <property name="usePool"  value="true" />
+  <property name="database" value="${redis.default.db}"/>
+ </bean>
+
+
+ <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+     <property name="connectionFactory" ref="jedisConnFactory"/>
+     <!--事务-->
+     <property name="enableTransactionSupport" value="true" />
+     <property name="defaultSerializer">
+         <bean class="org.springframework.data.redis.serializer.JacksonJsonRedisSerializer">
+             <constructor-arg value="java.lang.String"></constructor-arg>
+         </bean>
+     </property>
+ </bean>
+</beans>

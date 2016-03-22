@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.apache.hadoop:hadoop-core:2.3.0-mr1-cdh">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/hadoop/hadoop-core/2.3.0-mr1-cdh/hadoop-core-2.3.0-mr1-cdh.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/hadoop/hadoop-core/2.3.0-mr1-cdh/hadoop-core-2.3.0-mr1-cdh-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/hadoop/hadoop-core/2.3.0-mr1-cdh/hadoop-core-2.3.0-mr1-cdh-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

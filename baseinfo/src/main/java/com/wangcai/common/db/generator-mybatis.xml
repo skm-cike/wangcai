@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE generatorConfiguration 
+PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" 
+"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd"> 
+
+<generatorConfiguration> 
+<!-- <classPathEntry location="mysql-connector-java-5.0.4-bin.jar" />  -->
+
+<context id="DB2Tables" targetRuntime="MyBatis3"> 
+<!-- 分页扩展插件 -->   
+<plugin type="com.wangcai.common.db.MySqlPaginationPlugin" />
+
+<commentGenerator> 
+<property name="suppressALLComments" value="true" /> 
+</commentGenerator> 
+
+<jdbcConnection driverClass="com.mysql.jdbc.Driver" 
+connectionURL="jdbc:mysql://localhost:3306/wangcai" userId="wangcai" password="wangcai"> 
+</jdbcConnection> 
+
+<javaTypeResolver> 
+<property name="forceBigDecimals" value="false" /> 
+</javaTypeResolver> 
+
+<javaModelGenerator targetPackage="com.wangcai.member.base.vo" targetProject="/media/skm/work/Work/intellij_work/wangcai/baseinfo/src/main/java">
+<property name="enableSubPackages" value="true" /> 
+<property name="trimStrings" value="true" /> 
+</javaModelGenerator> 
+
+<sqlMapGenerator targetPackage="com.wangcai.member.base.dao" targetProject="/media/skm/work/Work/intellij_work/wangcai/baseinfo/src/main/java">
+<property name="enableSubPackages" value="true" /> 
+</sqlMapGenerator> 
+
+<javaClientGenerator type="xmlmapper" targetPackage="com.wangcai.member.base.dao" targetProject="/media/skm/work/Work/intellij_work/wangcai/baseinfo/src/main/java">
+<property name="enableSubPackages" value="true" /> 
+</javaClientGenerator> 
+
+<table tableName="MEM_BASE_URLRESOURCE" domainObjectName="MemUrlResource" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" > </table>
+
+</context> 
+</generatorConfiguration>

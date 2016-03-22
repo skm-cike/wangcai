@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:p="http://www.springframework.org/schema/p"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:mvc="http://www.springframework.org/schema/mvc"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	<context:property-placeholder location="classpath:*.properties"/>
+	<!-- 数据库配置 -->
+	<!--<bean id="lobHandler" lazy-init="true" class="org.springframework.jdbc.support.lob.DefaultLobHandler">-->
+	<!--</bean>-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
+        <property name="driverClass" value="${datasource.driverClassName}" />
+		<property name="jdbcUrl" value="${datasource.url}" />
+		<property name="user" value="${datasource.username}" />
+		<property name="password" value="${datasource.password}" />
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="maxPoolSize" value="6" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="numHelperThreads" value="${c3p0.numHelperThreads}" />
+		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}" />
+      </bean>
+      <!-- 创建SqlSessionFactory，同时指定数据源-->
+      <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+      	<property name="dataSource" ref="dataSource" /> 
+        <property name="configLocation" value="classpath:mybatis.xml"></property>
+      </bean>
+      
+      <!-- 配置事务属性 -->
+      <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	  </bean>
+      <!--事物拦截-->
+      <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<!--<prop key="*">PROPAGATION_REQUIRED</prop>-->
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="sav*">PROPAGATION_REQUIRED</prop>
+				<prop key="add*">PROPAGATION_REQUIRED</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED</prop>
+				<prop key="del*">PROPAGATION_REQUIRED</prop>
+				<prop key="get*">readOnly</prop>
+				<prop key="find*">readOnly</prop>
+				<prop key="load*">readOnly</prop>
+				<prop key="change*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">readOnly</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+				<value>*Service</value>
+				<value>*ServiceImp</value>
+				<value>*ServiceImpl</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+    <!-- 配置要扫描的xxxMapper.xml -->  
+     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"  p:basePackage="com.wangcai.*.*.dao"  p:sqlSessionFactoryBeanName="sqlSessionFactory"/>
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"  p:basePackage="com.wangcai.sysinit.*.dao"  p:sqlSessionFactoryBeanName="sqlSessionFactory"/>   -->
+  
+    <!-- 事务管理 -->  
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" p:dataSource-ref="dataSource"/>   
+    <!-- <tx:annotation-driven transaction-manager="txManager" />   -->
+	
+
+	<!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
+	<context:component-scan base-package="com.wangcai.*.*.service" />
+	<!--<context:component-scan base-package="com.wangcai.sysinit.*.service" />-->
+	<context:component-scan base-package="com.wangcai.*.*.web" />
+    <bean id="springContextHolder" class="com.wangcai.common.util.SpringContextHolder" lazy-init="false"/>
+</beans>

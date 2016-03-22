@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+        xmlns:security="http://www.springframework.org/schema/security"  
+        xsi:schemaLocation="http://www.springframework.org/schema/beans   
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/security   
+                http://www.springframework.org/schema/security/spring-security.xsd">
+    <security:http pattern="/css/**"  security="none"  />
+	<security:http pattern="/images/**"  security="none" />
+	<security:http pattern="/img/**"  security="none" />
+	<security:http pattern="/js/**"  security="none" />
+	<security:http pattern="/include.jsp"  security="none" />
+	
+	<!-- <security:http pattern="/**"  security="none" /> -->
+	<security:http auto-config="true" access-denied-page="/error_403.jsp"  authentication-manager-ref="wangcai_authenticationManager">
+		
+		<security:intercept-url pattern="/login.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<!-- session失效检查 -->
+		<security:session-management session-fixation-protection="migrateSession" invalid-session-url="/login.jsp">
+			<security:concurrency-control max-sessions="1" />
+		</security:session-management>
+		<!-- 下面是对Action配置。表示具有访问/unitsManager资源的用户必须具有ROLE_PLATFORMADMIN的权限。 当用户登录时，SS3将用户的所有权限从数据库中提取出来，形成列表。 
+			当用户访问该资源时，SS3将 登录用户的权限列表提出来跟下面配置的权限进行比对，若有，则允许访问，若没有，则给出AccessDeniedException。 -->
+		<!-- 
+		<intercept-url pattern="/verticalQuery" access="ROLE_PLATFORMADMIN" />
+		<form-login login-page="/login.jsp"
+			authentication-failure-url="/login.jsp?error=true"
+			default-target-url="/index.jsp" />
+		<security:logout invalidate-session="true"
+			logout-success-url="/login.jsp" logout-url="/login.jsp" />
+		-->
+		  <!-- "记住我"功能，采用持久化策略（将用户的登录信息存放在数据库表中） -->
+		  <!-- 
+  		<remember-me data-source-ref="dataSource" />
+		 -->
+		<!-- 增加一个自定义的filter，放在FILTER_SECURITY_INTERCEPTOR之前，实现用户、角色、权限、资源的数据库管理。  -->
+		<security:custom-filter ref="wangcaiFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+		
+		<!-- TODO 自定义的未授权访问拒绝的处理器 -->
+        <!-- <security:access-denied-handler ref="accessDeniedHandler"/> -->
+        
+	</security:http>
+         
+        <!-- 验证配置 ， 认证管理器，实现用户认证的入口，主要实现UserDetailsService接口即可 -->  
+	    <security:authentication-manager  alias="wangcai_authenticationManager" >
+	        <security:authentication-provider user-service-ref="wangcai_userDetailService">
+	            <security:password-encoder hash="md5" >
+	            	<security:salt-source user-property="username"/>
+	            </security:password-encoder>  
+	        </security:authentication-provider>  
+	    </security:authentication-manager>  
+    
+     <!-- 一个自定义的filter，必须包含authenticationManager,accessDecisionManager,securityMetadataSource三个属性， 我们的所有控制将在这三个类中实现，解释详见具体配置  -->  
+    <bean id="wangcaiFilter" class="com.wangcai.common.authority.FilterSecurityInterceptor">  
+        <property name="authenticationManager" ref="wangcai_authenticationManager" />  
+        <!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源     -->  
+        <property name="accessDecisionManager" ref="wangcai_accessDecisionManager" />  
+        <property name="securityMetadataSource" ref="wangcai_securityMetadataSource" />  
+    </bean>
+    
+    <bean id="wangcai_accessDecisionManager" class="com.wangcai.common.authority.AccessDecisionManagerImpl"></bean>
+    <!-- 资源源数据定义，将所有的资源和权限对应关系建立起来，即定义某一资源可以被哪些角色访问     --> 
+    <bean id="wangcai_securityMetadataSource" class="com.wangcai.common.authority.SecurityMetadataSourceExtendImpl"></bean>
+    <bean id="wangcai_userDetailService" class="com.wangcai.common.authority.UserDetailsServiceImpl"></bean>
+    
+    <bean id="loadUserAndResource" class="com.wangcai.common.authority.LoadUserAndResource"></bean>
+</beans>  
