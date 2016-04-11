@@ -1,19 +1,19 @@
 package com.wangcai.common.util;
 
 /**
- * ÃèÊö: Êı¾İ³¤¶ÈÒì³£
- * ×÷Õß: Â½»ª
+ * æè¿°: æ•°æ®é•¿åº¦å¼‚å¸¸
+ * ä½œè€…: é™†å
  *
- * Ê±¼ä: 2012 2012-8-2 ÏÂÎç5:00:40
+ * æ—¶é—´: 2012 2012-8-2 ä¸‹åˆ5:00:40
  */
 public class DataLengthException extends Exception {
-	private static final long serialVersionUID = -4388463824196588481L;
+    private static final long serialVersionUID = -4388463824196588481L;
 
-	public DataLengthException() {
-		super("Êı¾İ³¤¶ÈÒì³£");
-	}
-	
-	public DataLengthException(String msg) {
-		super(msg);
-	}
+    public DataLengthException() {
+        super("æ•°æ®é•¿åº¦å¼‚å¸¸");
+    }
+
+    public DataLengthException(String msg) {
+        super(msg);
+    }
 }
