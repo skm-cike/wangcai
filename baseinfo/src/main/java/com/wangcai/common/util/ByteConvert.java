@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  * @描述: 字节处理,所有处理若无特殊说明，皆是低位在前，高位在后
- * @author Administrator
+ * @author luhua
  *
  */
 public class ByteConvert {
