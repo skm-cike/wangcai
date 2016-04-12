@@ -19,9 +19,9 @@ http://www.springframework.org/schema/tx/spring-tx.xsd
 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 	<context:property-placeholder location="classpath:*.properties"/>
 	<!-- 数据库配置 -->
-	<!--<bean id="lobHandler" lazy-init="true" class="org.springframework.jdbc.support.lob.DefaultLobHandler">-->
-	<!--</bean>-->
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
+	<bean id="lobHandler" lazy-init="true" class="org.springframework.jdbc.support.lob.DefaultLobHandler">
+	</bean>
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="${datasource.driverClassName}" />
 		<property name="jdbcUrl" value="${datasource.url}" />
 		<property name="user" value="${datasource.username}" />
@@ -95,4 +95,24 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 	<!--<context:component-scan base-package="com.wangcai.sysinit.*.service" />-->
 	<context:component-scan base-package="com.wangcai.*.*.web" />
     <bean id="springContextHolder" class="com.wangcai.common.util.SpringContextHolder" lazy-init="false"/>
+
+    <!-- activiti -->
+    <!-- 加载activiti引擎 -->
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration" />
+    </bean>
+    <bean id="processEngineConfiguration"
+          class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <property name="dataSource" ref="dataSource" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="databaseSchemaUpdate" value="true" />
+        <property name="jobExecutorActivate" value="false" />
+    </bean>
+
+    <!-- activiti的各种服务接口 -->
+    <bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService" />
+    <bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService" />
+    <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService" />
+    <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />
+    <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService" />
 </beans>

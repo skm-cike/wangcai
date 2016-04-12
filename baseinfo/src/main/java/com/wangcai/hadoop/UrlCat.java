@@ -3,6 +3,7 @@ package com.wangcai.hadoop;
 
 import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
 import org.apache.hadoop.io.IOUtils;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,5 @@ public class UrlCat {
             e.printStackTrace();
             IOUtils.closeStream(in);
         }
-
     }
 }

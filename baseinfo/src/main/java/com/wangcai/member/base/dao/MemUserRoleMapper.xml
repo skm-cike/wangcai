@@ -10,6 +10,7 @@
     <id column="ROLEID" property="roleid" jdbcType="BIGINT" />
     <id column="USERID" property="userid" jdbcType="BIGINT" />
   </resultMap>
+
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated
